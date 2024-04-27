@@ -1,3 +1,38 @@
+import discord
+from time import sleep
+from sms import SendSms
+
+TOKEN = "x"
+
+gif = "https://media.tenor.com/SWiGXYOM8eMAAAAC/russia-soviet.gif"
+saniye = 0
+
+# Kara listedeki numaralar
+blacklist = ["5311234567", "5399876543", "5325554433"]
+
+# İzin verilen rol adı
+allowed_role = "Yetkili"
+
+intents = discord.Intents.all()
+client = discord.Client(intents=intents)
+
+# Botu durdurma fonksiyonu
+async def stop_bot(message):
+    await message.channel.send("Bot durduruluyor...")
+    await client.logout()
+
+# Botu başlatma fonksiyonu
+async def start_bot(message):
+    await message.channel.send("Bot başlatılıyor...")
+    await client.login(TOKEN)
+    await client.connect()
+
+@client.event
+async def on_ready():
+    print('{} Çalışmaya Başladı!'.format(client.user))
+    activity = discord.Activity(type=discord.ActivityType.playing, name="BOMBA ATAR 7/24 SAPLAR")
+    await client.change_presence(activity=activity)
+    
 @client.event
 async def on_message(message):
     # Botun kendi mesajlarına tepki vermemesi için kontrol ekleyin
