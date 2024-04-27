@@ -50,11 +50,11 @@ async def on_message(message):
             if len(telno) == 10:
                 # Eğer numara kara listedeyse gönderme
                 if telno in blacklist:
-                    await message.channel.send(f"Bu numaraya SMS göndermek engellenmiştir.\n{message.author.mention}")
+                    await message.channel.send(f"Bu numaraya SMS göndermek engellenmiştir.\n{message.author}")
                     return
                 
                 adet *= 2  # Kullanıcının girdiği sayının iki katını al
-                embed=discord.Embed(title="SMS Bomber (+90)", description=(f"{adet} adet SMS Gönderiliyor --> {telno}\n{message.author.mention}"), color=0x001eff)
+                embed=discord.Embed(title="SMS Bomber (+90)", description=(f"{adet} adet SMS Gönderiliyor --> {telno}\n{message.author}"), color=0x001eff)
                 embed.set_thumbnail(url=gif)
                 await message.channel.send(embed=embed)
                 sms = SendSms(telno, "")
@@ -67,14 +67,14 @@ async def on_message(message):
                                     break
                                 exec("sms."+attribute+"()")
                                 sleep(saniye)
-                await message.channel.send(telno+" --> "+str(sms.adet)+f" adet SMS gönderildi.\n{message.author.mention}")                        
+                await message.channel.send(telno+" --> "+str(sms.adet)+f" adet SMS gönderildi.\n{message.author}")                        
             else:
-                await message.channel.send(f"Geçerli komut yazınız!\nYardım için '!help' yazınız.\n{message.author.mention}")
+                await message.channel.send(f"Geçerli komut yazınız!\nYardım için '!help' yazınız.\n{message.author}")
         elif "!help" == message.content:
-            await message.channel.send(f"Sms göndermek için komutu aşağıdaki gibi yazınız.\n```!sms 5313313131 10```\n!sms (telefon numarası) (adet)\n{message.author.mention}")
+            await message.channel.send(f"Sms göndermek için komutu aşağıdaki gibi yazınız.\n```!sms 5313313131 10```\n!sms (telefon numarası) (adet)\n{message.author}")
         else:
             pass
     else:
-        await message.channel.send("Bu komutu kullanmak için gerekli izne sahip değilsiniz.\n{message.author.mention}")
+        await message.channel.send(f"Bu komutu kullanmak için gerekli izne sahip değilsiniz.\n{message.author}")
   
 client.run(TOKEN)
